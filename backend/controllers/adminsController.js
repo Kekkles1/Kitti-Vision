@@ -26,6 +26,31 @@ module.exports={
         } 
         // return table;
     },
+
+    //Admin can view all users
+    getAllUsers: async function  (req, res){
+      let connection ;
+      try {
+        console.log("hitttt--<<<<<<")
+          connection = await getConnection();
+          const table = await connection.execute("SELECT * FROM users");
+          // console.log(table.rows);
+          res.status(200).send(table);
+        } catch (error) {
+          console.error('Error executing SQL query to get all users:', error);
+          res.status(500).send('Internal Server Error');
+        } finally {
+          if (connection) {
+            try {
+              // Release the connection when done
+              await connection.close();
+            } catch (error) {
+              console.error('Error closing database connection:', error);
+            }
+          }
+      } 
+      // return table;
+  },
     
     //Admin can create new admin
     AddNewAdmin: async function (req, res){
@@ -89,9 +114,11 @@ module.exports={
     }
 },
 
-//This works because admin_id is not a foreign key anywhere
+
+/**
+ *  Admin can ONLY delete their own admin_id. Need to use parameters. This is a frontend-backend problem.
+ */
 DeleteAdminID : async function (req, res){
-  
   let connection ;
   try{
     connection = await getConnection();
