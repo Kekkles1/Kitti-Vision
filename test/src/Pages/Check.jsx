@@ -1,30 +1,61 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
+import api from '../api';
+import './Home.css';
+import '../Fonts/Playball-Regular.ttf';
+
 
 const Check=()=> {
-    useEffect(() => {
-        // Define your backend endpoint URL
-        const backendEndpoint = "http://localhost:3001/";
-    
-        // Make a GET request to the backend
-        axios.get(backendEndpoint)
-          .then(response => {
-            // Handle the successful response from the backend
-            console.log('Backend is connected:', response.data);
-          })
-          .catch(error => {
-            // Handle any errors that occurred during the request
-            console.error('Error connecting to the backend:', error);
-          });
-      }, []); // Empty dependency array to ensure the effect runs once when the component mounts
-    
-      return (
-    <div>
-        Bye
-    </div>
-      );
-    };
+  const navigate = useNavigate()
+  const [shows, setShows] = useState([]);
+
+  useEffect(() => {
+    api.get("/tvShow").then((response) => {
+        console.log("API Data:", response.data.rows);
+        setShows(response.data.rows);
+      })
+      .catch((error) => {
+        console.error("API Error:", error);
+      });
+  }, []);
+
+  return (
+<div className="Home">
+            <header
+            style =
+            {{backgroundColor:'#c9305e',height:'68px',fontSize:'35px', fontWeight:'400',color:'white',
+            textShadow:'0px 4px 4px #00000040',fontFamily:"Playball-Regular"}}>
+                KITTI VISION
+            </header>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Season</th>
+                  <th>Genre</th>
+                  <th>Synopsis</th>
+                  <th>Language</th>
+                  <th>Rating</th>
+                </tr>
+              </thead>
+              <tbody>
+              {shows.map((show, index) => (
+            <tr key={index}>
+              <td>{show[0]}</td>
+              <td>{show[1]}</td>
+              <td>{show[2]}</td>
+              <td>{show[3]}</td>
+              <td>{show[4]}</td>
+              <td>{show[5]}</td>
+              <td>{show[6]}</td>
+            </tr>
+          ))}
+              </tbody>
+            </table>
+        </div>
+  );
+}
 
 export default Check
