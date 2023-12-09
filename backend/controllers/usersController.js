@@ -109,6 +109,7 @@ getAllWatchlists: async function  (req, res){
 },
 
 //Admin can view all episodes for a tv_show
+//DOESNT WORK
 getAllEpisodes: async function (req, res) {
   let connection;
   try {
