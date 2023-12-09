@@ -20,7 +20,7 @@ function Login() {
         </EmailButton>
         <Password className="password">
         </Password>
-        <button onClick={()=>navigate('/')} style=
+        <button onClick={()=>navigate('/home')} style=
       {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
       width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
         Login

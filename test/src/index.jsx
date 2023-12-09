@@ -4,18 +4,23 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './pages/home';
-import Login from './pages/login'
+import Login from './Pages/login';
+import Check from './Pages/Check';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const router = createBrowserRouter([
   {
-    path : "/login",
+    path : "/",
     element :  <Login />
   },
   {
-    path : "/",
+    path : "/home",
     element : <Home />
+  },
+  {
+    path : "/check",
+    element : <Check />
   }
 ])
 
