@@ -6,6 +6,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './Pages/home';
 import Login from './Pages/login';
 import Check from './Pages/Check';
+import Temp from './Pages/Temp';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path : "/check",
     element : <Check />
+  },
+  {
+    path : "/temp",
+    element : <Temp />
   }
 ])
 

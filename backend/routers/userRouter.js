@@ -12,6 +12,7 @@ router.get("/GetAllEpisodes",usersController.getAllEpisodes);
 router.get("/GetAllWatchlists",usersController.getAllWatchlists);
 router.get("/GetAllReviews",usersController.getAllReviews);
 router.post("/AddReview",usersController.AddReview);
-router.get("/GetShowName",usersController.GetShowName);
+router.get("/ShowName/:id",usersController.GetShowName);
+router.get("/UsernameCheck",usersController.UsernameCheck);
 
 module.exports = router;

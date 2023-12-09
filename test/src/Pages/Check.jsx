@@ -54,6 +54,11 @@ const Check=()=> {
           ))}
               </tbody>
             </table>
+            <button onClick={()=>navigate('/temp')} style=
+      {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
+      width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
+        Temp
+        </button>
         </div>
   );
 }
