@@ -10,6 +10,7 @@ router.post("/AddNewAdmin",adminsController.AddNewAdmin);
 router.get("/GetAllUsers",adminsController.getAllUsers);
 router.post("/AddNewShow",adminsController.AddNewShow);
 router.delete("/DeleteAdminID",adminsController.DeleteAdminID);
+router.delete("DeleteUserID",adminsController.DeleteUserID);
 router.post("/AddNewEpisode",adminsController.AddNewEpisode);
 router.get("/getAllEpisodes",adminsController.getAllEpisodes);
 

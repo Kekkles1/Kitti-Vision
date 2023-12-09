@@ -147,6 +147,42 @@ DeleteAdminID : async function (req, res){
   }
 },
 
+/**
+ * Write a procedure for this (or use cascade delete)
+ * Has to delete user_id referenced in other tables. Create another table called deleted_history.
+ *  Pre_deletion, insert data into new table
+ * (DOESNT RUN)
+ */
+DeleteUserID : async function (req, res){
+  
+  let connection ;
+  try{
+    connection = await getConnection();
+    const query = `DELETE FROM users WHERE user_id = :1`;
+    const binds = [req.body.tv_show_id];
+    const options = {
+      autoCommit: true, // Commit each insert immediately
+    };
+
+    await connection.execute(query,binds,options);
+    res.status(202).send("Deleted User");
+  }
+  catch(error){
+    console.log("Error executing SQL query to delete users:" ,error)
+    res.status(500).send('Internal Server Error');
+  }
+  finally{
+    if(connection){
+      try{
+        await connection.close();
+      }
+      catch(error){
+        console.log("Error closing database connection:", error);
+      }
+    }
+  }
+},
+
 //Only admins can add episodes to tv shows
 AddNewEpisode: async function (req, res){
   let connection ;
