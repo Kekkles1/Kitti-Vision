@@ -238,5 +238,99 @@ getAllEpisodes: async function (req, res) {
       }
     }
   }
+},
+
+//Checks if a Admin exists (matches username with table dummy data)
+AdminUsernameCheck: async function (req, res) {
+  let connection;
+  try {
+    connection = await getConnection();
+    const username=req.query.username;
+
+    const query = `
+    BEGIN 
+    admin_username(:username);
+     END;`;
+
+    const binds = { username: username};
+
+    console.log(query, binds);
+
+    try {
+      const result = await connection.execute(query, binds);
+
+      res.status(200).send("Admin Username is correct!");
+
+    } catch (error) {
+      if (error && error.errorNum === 20001) {
+        res.status(202).send("Admin Useraname is incorrect");
+      } else {
+        console.error("Error executing SQL query:", error);
+        res
+          .status(500)
+          .send("Internal Server Error while running the procedure");
+      }
+    }
+  } catch (error) {
+    console.error("Error executing SQL on an even bigger scale:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
+},
+
+//Checks if a Admin exists (matches password with table dummy data)
+AdminPasswordCheck: async function (req, res) {
+  let connection;
+  try {
+    connection = await getConnection();
+    const password=req.query.password;
+
+    const query = `
+    BEGIN 
+    admin_password(:password);
+     END;`;
+
+    const binds = { password: password};
+
+    console.log(query, binds);
+
+
+    try {
+      const result = await connection.execute(query, binds);
+
+      res.status(200).send("Admin Password is correct!");
+
+    } catch (error) {
+      if (error && error.errorNum === 20001) {
+        res.status(202).send("Admin Password is incorrect.");
+      } else {
+        console.error("Error executing SQL query:", error);
+        res
+          .status(500)
+          .send("Internal Server Error while running the procedure");
+      }
+    }
+  } catch (error) {
+    console.error("Error executing SQL on an even bigger scale:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
 }
+
 }
