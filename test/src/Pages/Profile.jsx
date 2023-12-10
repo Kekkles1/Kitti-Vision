@@ -9,6 +9,24 @@ import Papi from '../images/papi.jpg';
 const Profile = () => {
     const navigate = useNavigate();
 
+    const [user_id, setUSER_ID] = useState([]);
+    const [data, setData]=useState([]);
+
+
+    useEffect(() => {
+      
+    });
+
+      const GetUser = async (event) => {
+        api.get("/users/GetUser/"+user_id).then((response) => {
+          console.log("API Data:", response.data);
+          setData(response.data);
+  
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+        });
+      };
 
     return (
         <div className="Profile">
@@ -18,6 +36,11 @@ const Profile = () => {
             textShadow:'0px 4px 4px #00000040',fontFamily:"Playball-Regular"}}>
                 KITTI VISION
             </header>
+            <label>
+              User_ID
+              <input type="text" value={user_id} onChange={(e) => setUSER_ID(e.target.value)}>
+              </input>
+            </label>
             <button onClick={()=>navigate('/profile')} style=
       {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
       width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
@@ -33,6 +56,32 @@ const Profile = () => {
       width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
         Show
         </button>
+        <button onClick={GetUser} style=
+      {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
+      width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
+        Get
+        </button>
+        <p>
+
+        </p>
+        <header>
+            <p>
+              Username
+            </p>
+            {data[0] ? data[0][0]:''}
+            <p>
+              Password
+            </p>
+            {data[0] ? data[0][1]:''}
+            <p>
+              Review Count
+            </p>
+            {data[0] ? data[0][2]:''}
+            <p>
+              Watchlist
+            </p>
+            {data[0] ? data[0][3]:''}
+        </header>
         </div>
     );
 }

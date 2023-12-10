@@ -16,5 +16,6 @@ router.get("/GetShowName/:id",usersController.GetShowName);         //works
 router.get("/UsernameCheck",usersController.UsernameCheck);         //WORKS
 router.get("/PasswordCheck",usersController.PasswordCheck);         //works
 router.get("/GetAllEpisodes",usersController.getAllEpisodes);       //works (make sure u pass in the body tv_show_id)
+router.get("/GetUser/:id",usersController.GetUser);                 //works
 
 module.exports = router;
