@@ -28,13 +28,20 @@ modify watchlist_id default sequence_watchlist_id.nextval;
 alter table reviews
 modify review_id default sequence_review_id.nextval;
 
---Procedures
-CREATE OR REPLACE PROCEDURE userDelete (input_userID iNT)
-AS
+--Procedure to delete User by entering user_id
+CREATE OR REPLACE PROCEDURE userDelete (input_userID INT)
+AS input_username varchar2(50);
+input_password varchar2(50);
 BEGIN
+SELECT username , password
+INTO input_username, input_password
+FROM users
+WHERE user_id=input_userID;
+
 DELETE FROM watchlist WHERE watchlist.user_id=input_userID;
 DELETE FROM reviews WHERE reviews.user_id=input_userID;
 DELETE FROM users WHERE users.user_id=input_userID;
+INSERT INTO deleted_history (user_id,username,password) VALUES (input_userID,input_username,input_password);
 COMMIT;
 DBMS_OUTPUT.PUT_LINE('DELETED USER');
 EXCEPTION
@@ -44,10 +51,11 @@ EXCEPTION
 END userDelete;
 
 begin
-userDelete(21);
+userDelete(23);
 end userDelete;
 
-insert into users (username,password) VALUES ('fatima','balorant');
+insert into users (username,password) VALUES ('hamza','shortKing');
+select * from deleted_history;
 select * from users;
 select * from watchlist;
 select * from reviews;
