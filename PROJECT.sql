@@ -25,6 +25,9 @@ DROP SEQUENCE sequence_review_id;
 DROP SEQUENCE sequence_cast_id;
 
 
+alter table users 
+ADD watchlist_count integer DEFAULT 0;
+
 alter table users
 modify user_id default sequence_user_id.nextval;
 
@@ -69,6 +72,16 @@ FOR EACH ROW
 BEGIN
 UPDATE users SET review_count=review_count+1
 WHERE users.user_id=:NEW.user_id;
+END;
+
+--trigger where on inserting watchlist, user created watchlist increases
+CREATE OR REPLACE TRIGGER add_watchlist
+BEFORE INSERT ON watchlist
+FOR EACH ROW
+BEGIN
+    UPDATE users
+    SET watchlist_count = watchlist_count + 1
+    WHERE user_id = :new.user_id;
 END;
 
 --PROCEDURES
@@ -291,3 +304,8 @@ INSERT INTO episodes (episode_id,title,runtime,tv_show_id) VALUES (3,'Women',30,
 INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Good show',1,1);
 INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Terrible show',3,1);
 INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Funny show',2,2);
+
+--Insert into watclist table
+INSERT INTO watchlist (name,list_length,user_id) VALUES ('WC1',3,1);
+INSERT INTO watchlist (name,list_length,user_id) VALUES ('WC2',2,1)
+INSERT INTO watchlist (name,list_length,user_id) VALUES ('Watchlist1',5,2)
