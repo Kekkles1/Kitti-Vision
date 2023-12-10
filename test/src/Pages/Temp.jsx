@@ -9,18 +9,19 @@ import './Login.css';
 
 const Temp = ()=> {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState({username:''});
+    const [password, setPassword] = useState({password:''});
 
     useEffect(() => {
     });
   
     const UsernameCheck = async (event) => {
-      const name = username.name;
-      console.log("username from frontend", name);
+      const name = username.username;
+      console.log("username from frontend", username);
       try {
+
         const response = await fetch(
-          `http://localhost:3001/users/usernamecheck/`+name,
+          `http://localhost:3001/users/usernamecheck?username=${username}`,
           {
             method: "GET",
             headers: {
@@ -37,7 +38,7 @@ const Temp = ()=> {
   
         const responseBody = await response.text();
   
-        if (responseBody === "User exists!") {
+        if (responseBody === "Username exists!") {
           console.log("username yay");
         } else {
           console.log("Unexpected response:", responseBody);
@@ -49,11 +50,12 @@ const Temp = ()=> {
     };
   
     const PasswordCheck = async (event) => {
-      const secret = password.secret;
-      console.log("password from frontend", secret);
+      const secret = password.password;
+      console.log("password from frontend", password);
       try {
+
         const response = await fetch(
-          `http://localhost:3001/users/passwordcheck/`+secret,
+          `http://localhost:3001/users/passwordcheck?password=${password}`,
           {
             method: "GET",
             headers: {
@@ -70,7 +72,7 @@ const Temp = ()=> {
   
         const responseBody = await response.text();
   
-        if (responseBody === "User exists!") {
+        if (responseBody === "Password exists!") {
           console.log("password yay");
         } else {
           console.log("Unexpected response:", responseBody);
@@ -98,7 +100,7 @@ const Temp = ()=> {
               </input>
             </label>
 
-            <button onClick={() => {UsernameCheck(username) 
+            <button onClick={() => {UsernameCheck(username)
             PasswordCheck(password)}} style=
           {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
           width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
