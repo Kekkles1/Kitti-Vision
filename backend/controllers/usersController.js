@@ -344,5 +344,6 @@ AddWatchlist: async function (req, res){
         }
       }
   }
-}
+},
+
 }
