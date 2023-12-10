@@ -107,6 +107,7 @@ UsernameCheck: async function (req, res) {
     } catch (error) {
       if (error && error.errorNum === 20001) {
         res.status(202).send("Useraname is incorrect");
+        throw new Error;
       } else {
         console.error("Error executing SQL query:", error);
         res

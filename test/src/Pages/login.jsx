@@ -11,6 +11,7 @@ const Login = ()=> {
     const navigate = useNavigate();
     const [username, setUsername] = useState({username:''});
     const [password, setPassword] = useState({password:''});
+    var usernamecheck=false;
 
     useEffect(() => {
     });
@@ -38,8 +39,9 @@ const Login = ()=> {
   
         const responseBody = await response.text();
   
-        if (responseBody === "Username exists!") {
+        if (responseBody === "Username is correct!") {
           console.log("username yay");
+          usernamecheck=true;
 
         } else {
           console.log("Unexpected response:", responseBody);
@@ -73,8 +75,12 @@ const Login = ()=> {
   
         const responseBody = await response.text();
   
-        if (responseBody === "Password exists!") {
+        if (responseBody === "Password is correct!") {
           console.log("password yay");
+          console.log("usernameCheck:",usernamecheck);
+          if (usernamecheck) {
+            navigate("/home");
+          }
         } else {
           console.log("Unexpected response:", responseBody);
         }
