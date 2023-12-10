@@ -100,9 +100,8 @@ const Temp = ()=> {
               </input>
             </label>
 
-            <button onClick={() => {UsernameCheck(username)
-            PasswordCheck(password)}} style=
-          {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
+            <button  onClick={() =>  UsernameCheck(username).then(() => { PasswordCheck(password); }).finally(() => navigate("/check"))} 
+            style={{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
           width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
             Login
             </button>
