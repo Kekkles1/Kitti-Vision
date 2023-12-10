@@ -88,33 +88,25 @@ UsernameCheck: async function (req, res) {
   let connection;
   try {
     connection = await getConnection();
-    const username = req.params.username;
+    const username=req.query.username;
 
-    console.log("Printing username entered in param", username);
-    console.log("checking");
-
-    const query = `BEGIN 
-    username_check(:input_username);
+    const query = `
+    BEGIN 
+    username_check(:username);
      END;`;
 
-    const binds = { input_username: username };
+    const binds = { username: username};
 
     console.log(query, binds);
 
     try {
-      const result = await connection.execute('BEGIN username_check(:input_username); END;',{input_username:req.params.username});
-      console.log(result.rows);
+      const result = await connection.execute(query, binds);
 
-      if (result.rows) {
-        res.status(202).send("not empty :(");
-       
-      } else {
-        res.status(202).send("haha loser empty");
-      }
-      
+      res.status(200).send("Username is correct!");
+
     } catch (error) {
       if (error && error.errorNum === 20001) {
-        res.status(202).send("Username doesn't exist.");
+        res.status(202).send("Useraname is incorrect");
       } else {
         console.error("Error executing SQL query:", error);
         res
@@ -143,33 +135,26 @@ PasswordCheck: async function (req, res) {
   let connection;
   try {
     connection = await getConnection();
-    const password = req.params.password;
+    const password=req.query.password;
 
-    console.log("password cehc",password);
-
-    const query = `BEGIN 
-    password_check(:input_password);
+    const query = `
+    BEGIN 
+    password_check(:password);
      END;`;
 
-    const binds = { password: password };
+    const binds = { password: password};
 
     console.log(query, binds);
 
+
     try {
-      const result = await connection.execute('BEGIN password_check(:input_password); END;',{input_password:req.params.password});
-      console.log(result.rows);
+      const result = await connection.execute(query, binds);
 
-      if (result.rows) {
-        res.status(202).send("password not empty :(");
-       
-      } else {
-        res.status(202).send("password haha loser empty");
-      }
+      res.status(200).send("Password is correct!");
 
-      res.status(200).send("Password exists!");
     } catch (error) {
       if (error && error.errorNum === 20001) {
-        res.status(202).send("Password doesn't exist.");
+        res.status(202).send("Password is incorrect.");
       } else {
         console.error("Error executing SQL query:", error);
         res
@@ -327,5 +312,6 @@ GetShowName: async function (req, res) {
       }
     }
   }
-}
+},
+
 }
