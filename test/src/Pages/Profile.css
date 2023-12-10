@@ -1,0 +1,13 @@
+.Profile {
+    background-color: #E85A85;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+  .button-style {
+    position: absolute;
+    height:45px;
+    width:45px;
+    left:1350px;
+  }

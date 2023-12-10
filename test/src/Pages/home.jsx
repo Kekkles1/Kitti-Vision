@@ -59,7 +59,12 @@ const Home=()=> {
             <button onClick={()=>navigate('/')} style=
       {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
       width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
-        Temp
+        Login Back
+        </button>
+        <button onClick={()=>navigate('/profile')} style=
+      {{ backgroundColor: 'white', color:'#FF477E',borderRadius: '88px',border:'none',
+      width:'296px',height:'50px',textAlign:'center',fontSize:'2vw',marginTop:'20px'}}>
+        Profile
         </button>
         </div>
   );
