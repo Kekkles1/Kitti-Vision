@@ -15,5 +15,5 @@ router.post("/AddNewEpisode",adminsController.AddNewEpisode);               //wo
 router.get("/getAllEpisodes",adminsController.getAllEpisodes);              //works (make sure u pass in the body tv_show_id)
 router.get("/AdminUsernameCheck",adminsController.AdminUsernameCheck);      //works
 router.get("/AdminPasswordCheck",adminsController.AdminPasswordCheck);      //works
-
+router.get("/getDeletedHistory",adminsController.getDeletedHistory);
 module.exports = router;
