@@ -36,7 +36,8 @@ const Home=()=> {
                   <th>Season</th>
                   <th>Genre</th>
                   <th>Synopsis</th>
-                  <th>Language</th>
+                  <th>Watchlist Count</th>
+                  <th>Review Count</th>
                   <th>Rating</th>
                 </tr>
               </thead>
@@ -50,6 +51,7 @@ const Home=()=> {
               <td>{show[4]}</td>
               <td>{show[5]}</td>
               <td>{show[6]}</td>
+              <td>{show[7]}</td>
             </tr>
           ))}
               </tbody>
