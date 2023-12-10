@@ -28,6 +28,34 @@ modify watchlist_id default sequence_watchlist_id.nextval;
 alter table reviews
 modify review_id default sequence_review_id.nextval;
 
+--Procedures
+CREATE OR REPLACE PROCEDURE userDelete (input_userID iNT)
+AS
+BEGIN
+DELETE FROM watchlist WHERE watchlist.user_id=input_userID;
+DELETE FROM reviews WHERE reviews.user_id=input_userID;
+DELETE FROM users WHERE users.user_id=input_userID;
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('DELETED USER');
+EXCEPTION
+        WHEN OTHERS THEN
+            ROLLBACK;
+            RAISE_APPLICATION_ERROR(-20001, 'Error deleting entry: ');
+END userDelete;
+
+begin
+userDelete(21);
+end userDelete;
+
+insert into users (username,password) VALUES ('fatima','balorant');
+select * from users;
+select * from watchlist;
+select * from reviews;
+
+
+drop procedure userDelete;
+
+--This is for users
 CREATE OR REPLACE PROCEDURE username_check (input_username varchar2)
 AS username_count NUMBER;
 
@@ -52,6 +80,7 @@ BEGIN
 username_check('maliha');
 END;
 
+--This is for users
 CREATE OR REPLACE PROCEDURE password_check (input_password varchar2)
 AS password_count NUMBER;
 
@@ -74,6 +103,54 @@ BEGIN
 password_check('kitten1');
 end;
 
+--This is for admins
+CREATE OR REPLACE PROCEDURE admin_username (admin_username varchar2)
+AS admin_count NUMBER;
+
+BEGIN
+SELECT count(*)
+INTO admin_count
+FROM admin
+WHERE admin.username=admin_username;
+
+IF admin_count > 0 THEN
+DBMS_OUTPUT.PUT_LINE('MATCH USERNAME');
+ELSE 
+RAISE_APPLICATION_ERROR(-20001, 'Admin username does not exist');
+END IF;
+END admin_username;
+
+select * from admin;
+
+begin
+admin_username('admin1');
+end;
+
+--This is for admins
+CREATE OR REPLACE PROCEDURE admin_password (admin_password varchar2)
+AS admin_count NUMBER;
+
+BEGIN
+SELECT count(*)
+INTO admin_count
+FROM admin
+WHERE admin.password=admin_password;
+
+IF admin_count > 0 THEN
+DBMS_OUTPUT.PUT_LINE('MATCH PASSWORD');
+ELSE 
+RAISE_APPLICATION_ERROR(-20001, 'Admin Password does not exist');
+END IF;
+END admin_password;
+
+select * from admin;
+
+begin
+admin_password('Password1');
+end;
+
+
+--TABLES
 CREATE TABLE users (
     user_id INT GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
     username varchar2(50),
@@ -134,30 +211,3 @@ user_id INT,
 username varchar2 (50),
 password varchar2 (50)
 );
-
-insert into users values ('1','fatima','balorant');
-insert into users values ('2','junaid','hellokitty');
-
-insert into admin values ('1','admin1','pass1');
-insert into admin values ('2','admin2','pass2');
-
-insert into tv_show (name,season,genre,synopsis,lang,rating) values ('Breaking Bad','5','Action','druggy show','English',3.5);
-insert into tv_show values (name,season,genre,synopsis,lang,rating)('Glee','2','Funny','singing should stop','English',1);
-insert into tv_show values ('The Crown','4','History','please queen is dead','English',4);
-
-insert into episodes values ('1','ep1','60','2');
-insert into episodes values ('2','ep12','60','3');
-insert into episodes values ('3','ep3','60','1');
-
-insert into cast values ('1','John','Lead','1');
-insert into cast values ('2','Sara','Co-Lead','3');
-insert into cast values ('3','Tom','Lead','2');
-
-
-insert into reviews values ('1','uhh ??','2','2');
-insert into reviews values ('2','bad','1','1');
-insert into reviews values ('3','good','3','3');
-
-insert into watchlist values ('1','wc1','2','3');
-insert into watchlist values ('2','wc2','1','2');
-insert into watchlist values ('3','wc3','3','1');
