@@ -82,30 +82,36 @@ module.exports={
     } 
 },
 
-//Checks if a User exists (matches username and password with table dummy data)
+
+//Checks if a User exists (matches username with table dummy data)
 UsernameCheck: async function (req, res) {
   let connection;
   try {
     connection = await getConnection();
-    const username = req.query.username;
+    const username = req.params.username;
 
-    console.log("Printing username from backend", username);
+    console.log("Printing username entered in param", username);
+    console.log("checking");
 
     const query = `BEGIN 
-    username_check(:username);
+    username_check(:input_username);
      END;`;
-    const binds = { username: username };
+
+    const binds = { input_username: username };
 
     console.log(query, binds);
 
     try {
-      console.log("printing");
+      const result = await connection.execute('BEGIN username_check(:input_username); END;',{input_username:req.params.username});
+      console.log(result.rows);
 
-      const result = await connection.execute(query, binds);
-
-      console.log("this is the result", result.rows);
-
-      res.status(200).send("Username exists!");
+      if (result.rows) {
+        res.status(202).send("not empty :(");
+       
+      } else {
+        res.status(202).send("haha loser empty");
+      }
+      
     } catch (error) {
       if (error && error.errorNum === 20001) {
         res.status(202).send("Username doesn't exist.");
@@ -131,6 +137,60 @@ UsernameCheck: async function (req, res) {
   }
 },
 
+
+//Checks if a User exists (matches password with table dummy data)
+PasswordCheck: async function (req, res) {
+  let connection;
+  try {
+    connection = await getConnection();
+    const password = req.params.password;
+
+    console.log("password cehc",password);
+
+    const query = `BEGIN 
+    password_check(:input_password);
+     END;`;
+
+    const binds = { password: password };
+
+    console.log(query, binds);
+
+    try {
+      const result = await connection.execute('BEGIN password_check(:input_password); END;',{input_password:req.params.password});
+      console.log(result.rows);
+
+      if (result.rows) {
+        res.status(202).send("password not empty :(");
+       
+      } else {
+        res.status(202).send("password haha loser empty");
+      }
+
+      res.status(200).send("Password exists!");
+    } catch (error) {
+      if (error && error.errorNum === 20001) {
+        res.status(202).send("Password doesn't exist.");
+      } else {
+        console.error("Error executing SQL query:", error);
+        res
+          .status(500)
+          .send("Internal Server Error while running the procedure");
+      }
+    }
+  } catch (error) {
+    console.error("Error executing SQL on an even bigger scale:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
+      }
+    }
+  }
+},
 
 // User can view all watchlists.
 getAllWatchlists: async function  (req, res){
@@ -243,7 +303,7 @@ GetShowName: async function (req, res) {
   try {
     connection = await getConnection();
     const tv_show_id = req.params.id;
-    const query = `SELECT NAME FROM tv_show WHERE tv_show_id =:tv_show_id`;
+    const query = `SELECT name FROM tv_show WHERE tv_show_id =:tv_show_id`;
     const binds = { tv_show_id: tv_show_id };
 
     try {
