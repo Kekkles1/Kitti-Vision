@@ -88,8 +88,8 @@ module.exports={
     let connection ;
     try {
         connection = await getConnection();
-        const query = `INSERT INTO tv_show (name,season,genre,synopsis,lang,rating) VALUES (:1, :2, :3, :4, :5, :6)`;
-        const binds = [req.body.name,req.body.season,req.body.genre,req.body.synopsis,req.body.lang,req.body.rating];
+        const query = `INSERT INTO tv_show (name,season,genre,synopsis,rating) VALUES (:1, :2, :3, :4, :5)`;
+        const binds = [req.body.name,req.body.season,req.body.genre,req.body.synopsis,req.body.rating];
         const options = {
           autoCommit: true, 
         };
@@ -226,15 +226,14 @@ AddNewEpisode: async function (req, res){
   }
 },
 
-//DOESNT WORK
+//WORKS
 getAllEpisodes: async function (req, res) {
   let connection;
   try {
     connection = await getConnection();
-    const query = `SELECT * from episodes where tv_show_id=:tv_show_id`;
-    const binds = [req.params.tv_show_id];
+    const query = 'SELECT * FROM episodes WHERE tv_show_id = :tv_show_id';
 
-    const table = await connection.execute(query);
+    const table = await connection.execute(query, [req.body.tv_show_id]);
     // console.log(table.rows);
     res.status(200).send(table);
   } catch (error) {
@@ -250,6 +249,30 @@ getAllEpisodes: async function (req, res) {
       }
     }
   }
+},
+
+//User can view ALL written reviews (make it so that it gives for specific tv_show_id)
+getAllReviews: async function  (req, res){
+  let connection ;
+  try {
+    console.log("hitttt--<<<<<<")
+      connection = await getConnection();
+      const table = await connection.execute("SELECT * FROM reviews");
+      // console.log(table.rows);
+      res.status(200).send(table);
+    } catch (error) {
+      console.error('Error executing SQL query to get all tv shows:', error);
+      res.status(500).send('Internal Server Error');
+    } finally {
+      if (connection) {
+        try {
+          // Release the connection when done
+          await connection.close();
+        } catch (error) {
+          console.error('Error closing database connection:', error);
+        }
+      }
+  } 
 },
 
 //Checks if a Admin exists (matches username with table dummy data)

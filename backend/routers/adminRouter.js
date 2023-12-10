@@ -11,8 +11,8 @@ router.get("/GetAllUsers",adminsController.getAllUsers);            //works
 router.post("/AddNewShow",adminsController.AddNewShow);             //works
 router.delete("/DeleteAdminID",adminsController.DeleteAdminID);     //works
 router.delete("/DeleteUserID",adminsController.DeleteUserID);       //doesnt work
-router.post("/AddNewEpisode",adminsController.AddNewEpisode);
-router.get("/getAllEpisodes",adminsController.getAllEpisodes);              //doesnt work
+router.post("/AddNewEpisode",adminsController.AddNewEpisode);               //works
+router.get("/getAllEpisodes",adminsController.getAllEpisodes);              //works (make sure u pass in the body tv_show_id)
 router.get("/AdminUsernameCheck",adminsController.AdminUsernameCheck);      //works
 router.get("/AdminPasswordCheck",adminsController.AdminPasswordCheck);      //works
 

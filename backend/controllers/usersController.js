@@ -203,14 +203,14 @@ getAllWatchlists: async function  (req, res){
   // return table;
 },
 
-//DOESNT WORK
+//WORKS
 getAllEpisodes: async function (req, res) {
   let connection;
   try {
     connection = await getConnection();
-    const query = `SELECT * FROM episodes WHERE ${req.body.tv_show_id}`;
+    const query = 'SELECT * FROM episodes WHERE tv_show_id = :tv_show_id';
 
-    const table = await connection.execute(query);
+    const table = await connection.execute(query, [req.body.tv_show_id]);
     // console.log(table.rows);
     res.status(200).send(table);
   } catch (error) {
@@ -315,4 +315,34 @@ GetShowName: async function (req, res) {
   }
 },
 
+//User can add a watchlist
+AddWatchlist: async function (req, res){
+  let connection ;
+  try {
+      connection = await getConnection();
+      const query = `INSERT INTO watchlist (name,list_length,user_id) VALUES (:1, :2, :3)`;
+      const binds = [req.body.name, req.body.list_length, req.body.user_id];
+      const options = {
+        autoCommit: true, 
+      };
+      
+      await connection.execute(query,binds,options);
+      res.status(202).send("Added Review");
+  } 
+  catch (error) {
+      console.error('Error executing SQL query to add user:', error);
+      res.status(500).send('Internal Server Error');
+    
+  } 
+  finally {
+      if (connection) {
+        try {
+          // Release the connection when done
+          await connection.close();
+        } catch (error) {
+          console.error('Error closing database connection:', error);
+        }
+      }
+  }
+}
 }
