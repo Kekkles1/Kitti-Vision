@@ -148,36 +148,48 @@ DeleteAdminID : async function (req, res){
 },
 
 /**
- * Write a procedure for this (or use cascade delete)
- * Has to delete user_id referenced in other tables. Create another table called deleted_history.
- *  Pre_deletion, insert data into new table
- * (DOESNT RUN)
+ * The procedure runs. Backend isnt working I dont know why
  */
 DeleteUserID : async function (req, res){
   
   let connection ;
   try{
     connection = await getConnection();
-    const query = `DELETE FROM users WHERE user_id = :1`;
-    const binds = [req.body.tv_show_id];
-    const options = {
-      autoCommit: true, // Commit each insert immediately
-    };
+    const user_id=[req.body.user_id];
 
-    await connection.execute(query,binds,options);
-    res.status(202).send("Deleted User");
-  }
-  catch(error){
-    console.log("Error executing SQL query to delete users:" ,error)
-    res.status(500).send('Internal Server Error');
-  }
-  finally{
-    if(connection){
-      try{
-        await connection.close();
+    console.log('user_id',user_id);
+
+    const query = `BEGIN 
+    userDelete(:user_id); 
+    END;`;
+
+    const binds = { user_id: user_id};
+
+    try {
+      const result = await connection.execute(query, binds);
+
+      res.status(200).send("User is deleted!");
+
+    } catch (error) {
+      if (error && error.errorNum === 20001) {
+        res.status(202).send("Did not delete");
+      } else {
+        console.error("Error executing SQL query:", error);
+        res
+          .status(500)
+          .send("Internal Server Error while running the procedure");
       }
-      catch(error){
-        console.log("Error closing database connection:", error);
+    }
+  } catch (error) {
+    console.error("Error executing SQL on an even bigger scale:", error);
+    res.status(500).send("Internal Server Error");
+  } finally {
+    if (connection) {
+      try {
+        // Release the connection when done
+        await connection.close();
+      } catch (error) {
+        console.error("Error closing database connection:", error);
       }
     }
   }
