@@ -40,7 +40,7 @@ WHERE users.username=input_username;
 IF username_count > 0 THEN
 DBMS_OUTPUT.PUT_LINE('MATCH USERNAME');
 ELSE 
-DBMS_OUTPUT.PUT_LINE('NO MATCH USERNAME');
+RAISE_APPLICATION_ERROR(-20001, 'Username does not exist');
 END IF;
 END username_check;
 
@@ -64,14 +64,14 @@ WHERE users.password=input_password;
 IF password_count > 0 THEN
 DBMS_OUTPUT.PUT_LINE('MATCH PASSWORD');
 ELSE 
-DBMS_OUTPUT.PUT_LINE('NO MATCH PASSWORD');
+RAISE_APPLICATION_ERROR(-20001, 'Password does not exist');
 END IF;
 END password_check;
 
 drop procedure password_check;
 
 BEGIN 
-password_check('kitten');
+password_check('kitten1');
 end;
 
 CREATE TABLE users (
