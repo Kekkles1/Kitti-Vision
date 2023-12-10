@@ -11,7 +11,6 @@ const Login = ()=> {
     const navigate = useNavigate();
     const [username, setUsername] = useState({username:''});
     const [password, setPassword] = useState({password:''});
-    let usernameCheck=false;
 
     useEffect(() => {
     });
@@ -33,7 +32,7 @@ const Login = ()=> {
   
         if (!response.ok) {
           throw new Error(
-            `Error seeing if id exists, from frontend: ${response.statusText}`
+            `Error seeing if username exists, from frontend: ${response.statusText}`
           );
         }
   
@@ -44,8 +43,6 @@ const Login = ()=> {
 
         } else {
           console.log("Unexpected response:", responseBody);
-          usernameCheck=true;
-          console.log(usernameCheck);
         }
       } catch (error) {
         console.error(error);
@@ -80,10 +77,6 @@ const Login = ()=> {
           console.log("password yay");
         } else {
           console.log("Unexpected response:", responseBody);
-          if (usernameCheck) {
-            console.log("Is this runnign");
-            navigate("/home");
-          }
         }
       } catch (error) {
         console.error(error);
