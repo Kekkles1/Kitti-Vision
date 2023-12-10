@@ -1,16 +1,28 @@
 SET SERVEROUTPUT ON;
 
+--dropping tables
+drop table tv_show;
+drop table reviews;
+drop table episodes;
+drop table cast;
+drop table deleted_history;
+drop table watchlist;
+drop table users;
+drop table admin;
+
 CREATE SEQUENCE SEQUENCE_USER_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQUENCE_ADMIN_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQUENCE_TVSHOW_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQUENCE_WATCHLIST_ID INCREMENT BY 1 START WITH 1;
 CREATE SEQUENCE SEQUENCE_REVIEW_ID INCREMENT BY 1 START WITH 1;
+CREATE SEQUENCE SEQUENCE_CAST_ID INCREMENT BY 1 START WITH 1;
 
 DROP SEQUENCE sequence_user_id;
 DROP SEQUENCE sequence_admin_id;
 DROP SEQUENCE sequence_tvshow_id;
 DROP SEQUENCE sequence_watchlist_id;
 DROP SEQUENCE sequence_review_id;
+DROP SEQUENCE sequence_cast_id;
 
 
 alter table users
@@ -28,6 +40,38 @@ modify watchlist_id default sequence_watchlist_id.nextval;
 alter table reviews
 modify review_id default sequence_review_id.nextval;
 
+--TRIGGERS
+--trigger where on inserting episode, episode count in tv table increases
+CREATE OR REPLACE TRIGGER add_episode 
+AFTER INSERT ON episodes
+FOR EACH ROW
+
+BEGIN
+UPDATE tv_show SET episode_count=episode_count+1
+WHERE tv_show.tv_show_id=:NEW.tv_show_id;
+END;
+
+-- trigger where on inserting reviews, review  count in tv table increases
+CREATE OR REPLACE TRIGGER add_review
+AFTER INSERT ON reviews
+FOR EACH ROW
+
+BEGIN
+UPDATE tv_show SET review_count=review_count+1
+WHERE tv_show.tv_show_id=:NEW.tv_show_id;
+END;
+
+--trigger where on inserting reviews, review count in users table increases
+CREATE OR REPLACE TRIGGER add_review_user
+AFTER INSERT ON reviews
+FOR EACH ROW
+
+BEGIN
+UPDATE users SET review_count=review_count+1
+WHERE users.user_id=:NEW.user_id;
+END;
+
+--PROCEDURES
 --Procedure to delete User by entering user_id
 CREATE OR REPLACE PROCEDURE userDelete (input_userID INT)
 AS input_username varchar2(50);
@@ -54,13 +98,6 @@ begin
 userDelete(23);
 end userDelete;
 
-insert into users (username,password) VALUES ('hamza','shortKing');
-select * from deleted_history;
-select * from users;
-select * from watchlist;
-select * from reviews;
-
-
 drop procedure userDelete;
 
 --This is for users
@@ -81,8 +118,6 @@ END IF;
 END username_check;
 
 drop procedure username_check;
-
-select * from users;
 
 BEGIN 
 username_check('maliha');
@@ -162,7 +197,8 @@ end;
 CREATE TABLE users (
     user_id INT GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
     username varchar2(50),
-    password varchar2(20)
+    password varchar2(20),
+    review_count int DEFAULT 0
 );
 
 CREATE TABLE admin (
@@ -185,7 +221,8 @@ CREATE TABLE tv_show (
     season varchar2(20),
     genre varchar2(250),
     synopsis varchar2(250),
-    lang varchar2(20),
+    episode_count int DEFAULT 0,
+    review_count int DEFAULT 0,
     rating FLOAT 
 );
 
@@ -199,7 +236,7 @@ FOREIGN KEY (tv_show_id) REFERENCES tv_show(tv_show_id)
 );
 
 CREATE TABLE cast (
-cast_id INT PRIMARY KEY,
+cast_id INT GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1) PRIMARY KEY,
 name varchar2(50),
 role varchar2(20),
 tv_show_id INT,
@@ -219,3 +256,38 @@ user_id INT,
 username varchar2 (50),
 password varchar2 (50)
 );
+
+--selecting tables
+select * from users;
+select * from admin;
+select * from cast;
+select * from deleted_history;
+select * from episodes;
+select * from tv_show;
+select * from watchlist;
+select * from reviews;
+
+--Insertion into the users tables
+INSERT INTO users (username,password) VALUES ('hamza','roblox');
+INSERT INTO users (username,password) VALUES ('fatima','balorant');
+INSERT INTO users (username,password) VALUES ('junaid','kitten');
+
+--Insertion into the admin tables
+INSERT INTO admin (username,password) VALUES ('admin1','pass1');
+INSERT INTO admin (username,password) VALUES ('admin2','pass2');
+INSERT INTO admin (username,password) VALUES ('admin3','pass3');
+
+--Insertion into the tv_shows tables
+INSERT INTO tv_show(name,season,genre,synopsis,rating) VALUES ('Breaking Bad',5,'Thriller','Chemistry teacher makes meth',4.5);
+INSERT INTO tv_show(name,season,genre,synopsis,rating) VALUES ('Derry Girls',7,'Funny','Girls are always funny',5.0);
+INSERT INTO tv_show(name,season,genre,synopsis,rating) VALUES ('The Crown',2,'Mystery','When will the queen die?',2.5);
+
+--Insertion into the episodes tables
+INSERT INTO episodes (episode_id,title,runtime,tv_show_id) VALUES (1,'Pilot',45,1);
+INSERT INTO episodes (episode_id,title,runtime,tv_show_id) VALUES (2,'make meth',50,1);
+INSERT INTO episodes (episode_id,title,runtime,tv_show_id) VALUES (3,'Women',30,2);
+
+--Insertion into reviews table
+INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Good show',1,1);
+INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Terrible show',3,1);
+INSERT INTO reviews (review_written,tv_show_id,user_id) VALUES ('Funny show',2,2);
