@@ -155,7 +155,7 @@ DeleteUserID : async function (req, res){
   let connection ;
   try{
     connection = await getConnection();
-    const user_id=[req.body.user_id];
+    const user_id=req.body.user_id;
 
     console.log('user_id',user_id);
 
