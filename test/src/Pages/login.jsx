@@ -18,7 +18,7 @@ const Login = ()=> {
   
     const UsernameCheck = async (event) => {
       const name = username.username;
-      console.log("username from frontend", username);
+      console.log("Entered username", username);
       try {
 
         const response = await fetch(
@@ -40,7 +40,7 @@ const Login = ()=> {
         const responseBody = await response.text();
   
         if (responseBody === "Username is correct!") {
-          console.log("username yay");
+          console.log("username yay!!");
           usernamecheck=true;
 
         } else {
@@ -54,7 +54,7 @@ const Login = ()=> {
   
     const PasswordCheck = async (event) => {
       const secret = password.password;
-      console.log("password from frontend", password);
+      console.log("Entered Password", password);
       try {
 
         const response = await fetch(
